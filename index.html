@@ -154,52 +154,6 @@
         </div>
     </section>
 
-    <script src="script.js"></script>
-    <script>
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://pgxlynzlilebnplprgyl.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBneGx5bnpsaWxlYm5wbHByZ3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MDk4MjQsImV4cCI6MjA3MDI4NTgyNH0.j2FVLiFWF4ZjtFa0m2lolepcWfI8xObvgDTbAjcYe7U';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Load dynamic content on page load
-        document.addEventListener('DOMContentLoaded', async function() {
-            await loadHomeContent();
-        });
-        
-        async function loadHomeContent() {
-            try {
-                // Load home content
-                const { data: homeData, error } = await supabase
-                    .from('home_content')
-                    .select('*')
-                    .single();
-                
-                if (homeData && !error) {
-                    // Update hero section
-                    const heroTitle = document.querySelector('.hero-title');
-                    const heroSubtitle = document.querySelector('.hero-subtitle');
-                    const featuresTitle = document.querySelector('.features-title');
-                    const featuresSubtitle = document.querySelector('.features-subtitle');
-                    
-                    if (heroTitle && homeData.hero_title) {
-                        // Parse hero title to maintain styling
-                        const titleParts = homeData.hero_title.split(' ');
-                        if (titleParts.length >= 2) {
-                            heroTitle.innerHTML = `${titleParts[0]} <span class="highlight">${titleParts[1]}</span><span class="dot">.</span>`;
-                        } else {
-                            heroTitle.innerHTML = `${homeData.hero_title}<span class="dot">.</span>`;
-                        }
-                    }
-                    if (heroSubtitle) heroSubtitle.textContent = homeData.hero_subtitle || 'Ground Works Simulations';
-                    if (featuresTitle) featuresTitle.textContent = homeData.features_title || 'Main Features';
-                    if (featuresSubtitle) featuresSubtitle.textContent = homeData.features_subtitle || 'What we produce and offer. All this just for you!';
-                }
-            } catch (error) {
-                console.error('Error loading home content:', error);
-                // Fallback to default content if database fails
-            }
-        }
-    </script>
 </body>
 </html>
 </body>
