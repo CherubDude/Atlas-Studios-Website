@@ -100,14 +100,14 @@ body {
 }
 
 .highlight {
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    background: linear-gradient(135deg, #cfae18, #af701e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .dot {
-    color: #3b82f6;
+    color: #af701e;
 }
 
 .hero-subtitle {
