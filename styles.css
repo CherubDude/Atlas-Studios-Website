@@ -100,14 +100,14 @@ body {
 }
 
 .highlight {
-    background: linear-gradient(135deg, #cfae18, #af701e);
+    background: linear-gradient(135deg, #d1a617, #f6953b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .dot {
-    color: #af701e;
+    color: #f6953b;
 }
 
 .hero-subtitle {
@@ -154,15 +154,10 @@ body {
 }
 
 .showcase-logo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    backdrop-filter: blur(0px);
-    border-radius: 10px;
-    padding: 0rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    z-index: 10;
+    border-radius: 15px;
+    z-index: 9;
+    height: 187.59px;
+    width: 187.59px;
 }
 
 /* Features Section */
