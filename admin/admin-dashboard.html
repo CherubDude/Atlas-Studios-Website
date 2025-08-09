@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Studios - Admin Dashboard</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="icon" type="image/png" href="../favicon.png" sizes="32x32">
+    
+    <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.9));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu button {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-menu button:hover,
+        .sidebar-menu button.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .main-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #3b82f6;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: #22c55e;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            color: #3b82f6;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            color: #3b82f6;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .card.featured {
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-info h3 {
+            color: #3b82f6;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-planning {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .status-in-development {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .status-coming-soon {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status-released {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .card-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .card-meta span {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .featured-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .card-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1 class="dashboard-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                Atlas Studios Admin Dashboard
+            </h1>
+            <a href="../index.html" class="back-btn">Back to Website</a>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <div class="dashboard-grid">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3 class="sidebar-title">Content Management</h3>
+                <ul class="sidebar-menu">
+                    <li><button class="menu-btn active" data-section="overview">Overview</button></li>
+                    <li><button class="menu-btn" data-section="games">Games</button></li>
+                    <li><button class="menu-btn" data-section="projects">Projects</button></li>
+                    <li><button class="menu-btn" data-section="team">Team Members</button></li>
+                    <li><button class="menu-btn" data-section="home">Home Page</button></li>
+                    <li><button class="menu-btn" data-section="information">Information</button></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Overview Section -->
+                <div class="content-section active" id="overview">
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="gamesCount">0</div>
+                            <div class="stat-label">Games</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="projectsCount">0</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="teamCount">0</div>
+                            <div class="stat-label">Team Members</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="featuredCount">0</div>
+                            <div class="stat-label">Featured Items</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <strong>Welcome!</strong> This dashboard allows you to manage all content across your Atlas Studios website.
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Quick Actions</h3>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button class="btn btn-primary" onclick="switchSection('games')">Manage Games</button>
+                            <button class="btn btn-primary" onclick="switchSection('projects')">Manage Projects</button>
+                            <button class="btn btn-secondary" onclick="window.open('../index.html', '_blank')">Preview Website</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games Section -->
+                <div class="content-section" id="games">
+                    <h2 class="section-title">Games Management</h2>
+                    
+                    <div class="form-actions" style="margin-bottom: 2rem; justify-content: flex-start;">
+                        <button type="button" class="btn btn-primary" onclick="showAddGameModal()">Add New Game</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadAllGames()">Refresh Games</button>
+                    </div>
+                    
+                    <div id="games-list">
+                        <div class="loading-placeholder" style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.7);">
+                            Loading games...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Section -->
+                <div class="content-section" id="projects">
+                    <h2 class="section-title">Projects Management</h2>
+                    
+                    <div class="form-actions" style="margin-bottom: 2rem; justify-content: flex-start;">
+                        <button type="button" class="btn btn-primary" onclick="showAddProjectModal()">Add New Project</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadAllProjects()">Refresh Projects</button>
+                    </div>
+                    
+                    <div id="projects-list">
+                        <div class="loading-placeholder" style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.7);">
+                            Loading projects...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Members Section -->
+                <div class="content-section" id="team">
+                    <h2 class="section-title">Team Members Management</h2>
+                    
+                    <div class="form-actions" style="margin-bottom: 2rem; justify-content: flex-start;">
+                        <button type="button" class="btn btn-primary" onclick="showAddTeamModal()">Add New Team Member</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadAllTeamMembers()">Refresh Team</button>
+                    </div>
+                    
+                    <div id="team-members-list">
+                        <div class="loading-placeholder" style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.7);">
+                            Loading team members...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Home Page Section -->
+                <div class="content-section" id="home">
+                    <h2 class="section-title">Home Page Content</h2>
+                    
+                    <form class="form-grid">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" id="homeHeroTitle" value="Atlas Studios." placeholder="Main hero title">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hero Subtitle</label>
+                            <input type="text" id="homeHeroSubtitle" value="Ground Works Simulations" placeholder="Hero subtitle">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" onclick="saveHomeContent()">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" onclick="loadHomeContent()">Reset</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Information Section -->
+                <div class="content-section" id="information">
+                    <h2 class="section-title">Studio Information</h2>
+                    
+                    <form class="form-grid">
+                        <div class="form-group full-width">
+                            <label>About Atlas Studios</label>
+                            <textarea id="infoAboutText" style="min-height: 120px;">Atlas Studios is a professional Roblox game development studio specializing in realistic simulation experiences.</textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Years Experience</label>
+                                <input type="text" id="infoYearsExp" value="2+" placeholder="Years">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Custom Assets Percentage</label>
+                                <input type="text" id="infoCustomAssets" value="100%" placeholder="Percentage">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discord Server URL</label>
+                            <input type="url" id="infoDiscordUrl" value="https://discord.gg/WgRm5Kx3FM" placeholder="Discord invite link">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" onclick="saveInformationContent()">Save Information</button>
+                            <button type="button" class="btn btn-secondary" onclick="loadInformationContent()">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="gameModalTitle">Add New Game</h3>
+                <button class="modal-close" onclick="closeModal('gameModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="gameForm" class="form-grid">
+                    <input type="hidden" id="gameId">
+                    
+                    <div class="form-group">
+                        <label>Game Title *</label>
+                        <input type="text" id="gameTitle" placeholder="Enter game title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Game Status</label>
+                        <select id="gameStatus">
+                            <option value="planning">Planning</option>
+                            <option value="in-development">In Development</option>
+                            <option value="coming-soon">Coming Soon</option>
+                            <option value="released">Released</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Game Description</label>
+                        <textarea id="gameDescription" placeholder="Enter game description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Game Image URL</label>
+                        <input type="url" id="gameImageUrl" placeholder="https://example.com/image.jpg">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Roblox Game URL</label>
+                        <input type="url" id="gameRobloxUrl" placeholder="https://www.roblox.com/games/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="gameIsFeatured" style="margin-right: 0.5rem;">
+                            Set as Featured Game
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input type="number" id="gameDisplayOrder" value="1" min="1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('gameModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveGame()">Save Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="projectModalTitle">Add New Project</h3>
+                <button class="modal-close" onclick="closeModal('projectModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="projectForm" class="form-grid">
+                    <input type="hidden" id="projectId">
+                    
+                    <div class="form-group">
+                        <label>Project Name *</label>
+                        <input type="text" id="projectName" placeholder="Enter project name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Project Status</label>
+                        <select id="projectStatus">
+                            <option value="concept">Concept</option>
+                            <option value="planning">Planning</option>
+                            <option value="in-development">In Development</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Project Description</label>
+                        <textarea id="projectDescription" placeholder="Enter project description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input type="number" id="projectDisplayOrder" value="1" min="1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('projectModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveProject()">Save Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Member Modal -->
+    <div id="teamModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="teamModalTitle">Add New Team Member</h3>
+                <button class="modal-close" onclick="closeModal('teamModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="teamForm" class="form-grid">
+                    <input type="hidden" id="teamId">
+                    
+                    <div class="form-group">
+                        <label>Member Name *</label>
+                        <input type="text" id="teamName" placeholder="Enter member name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role/Title</label>
+                        <input type="text" id="teamRole" placeholder="e.g. Lead Developer, 3D Artist">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Bio/Description</label>
+                        <textarea id="teamBio" placeholder="Brief description of the team member"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="teamIsActive" style="margin-right: 0.5rem;" checked>
+                            Active Team Member
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input type="number" id="teamDisplayOrder" value="1" min="1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('teamModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveTeamMember()">Save Team Member</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dashboard initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuButtons = document.querySelectorAll('.menu-btn');
+            menuButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetSection = this.getAttribute('data-section');
+                    switchSection(targetSection);
+                });
+            });
+
+            // Initialize dashboard
+            loadDashboardStats();
+        });
+
+        // Navigation
+        function switchSection(sectionName) {
+            // Update menu active state
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-section') === sectionName) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionName).classList.add('active');
+
+            // Load data for specific sections
+            if (sectionName === 'games') {
+                loadAllGames();
+            } else if (sectionName === 'projects') {
+                loadAllProjects();
+            } else if (sectionName === 'team') {
+                loadAllTeamMembers();
+            } else if (sectionName === 'home') {
+                loadHomeContent();
+            } else if (sectionName === 'information') {
+                loadInformationContent();
+            }
+        }
+
+        // Dashboard stats
+        async function loadDashboardStats() {
+            try {
+                // Load games count
+                const response = await fetch('/api/games/count');
+                const gamesCount = await response.json();
+                document.getElementById('gamesCount').textContent = gamesCount.count || 0;
+
+                // Load projects count
+                const projectsResponse = await fetch('/api/projects/count');
+                const projectsCount = await projectsResponse.json();
+                document.getElementById('projectsCount').textContent = projectsCount.count || 0;
+
+                // Load team members count
+                const teamResponse = await fetch('/api/team/count');
+                const teamCount = await teamResponse.json();
+                document.getElementById('teamCount').textContent = teamCount.count || 0;
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+            }
+        }
+
+        // GAMES MANAGEMENT
+        async function loadAllGames() {
+            try {
+                showAlert('Loading games...', 'info');
+                
+                const response = await fetch('/api/games');
+                const games = await response.json();
+                
+                const gamesList = document.getElementById('games-list');
+                
+                if (!games || games.length === 0) {
+                    gamesList.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.7);">
+                            <h3>No games found</h3>
+                            <p>Click "Add New Game" to create your first game.</p>
+                        </div>
+                    `;
+                } else {
+                    gamesList.innerHTML = games.map(game => createGameCard(game)).join('');
+                }
+                
+                setTimeout(() => removeAlerts(), 500);
+            } catch (error) {
+                console.error('Error loading games:', error);
+                showAlert('Error loading games: ' + error.message, 'danger');
+            }
+        }
+
+        function createGameCard(game) {
+            const statusClass = `status-${game.status.replace('_', '-')}`;
+            const statusText = game.status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            return `
+                <div class="card ${game.is_featured ? 'featured' : ''}" data-id="${game.id}">
+                    <div class="card-header">
+                        <div class="card-info">
+                            <h3>${game.title}</h3>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                                ${game.is_featured ? '<span class="featured-badge">Featured</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small" onclick="editGame(${game.id})">Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteGame(${game.id})">Delete</button>
+                        </div>
+                    </div>
+                    ${game.description ? `<p class="card-description">${game.description}</p>` : ''}
+                    <div class="card-meta">
+                        <span>Order: ${game.display_order}</span>
+                        ${game.image_url ? '<span>✅ Has Image</span>' : '<span>📷 No Image</span>'}
+                        ${game.roblox_url ? '<span>🎮 Roblox Link</span>' : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAddGameModal() {
+            document.getElementById('gameModalTitle').textContent = 'Add New Game';
+            document.getElementById('gameForm').reset();
+            document.getElementById('gameId').value = '';
+            document.getElementById('gameDisplayOrder').value = 1;
+            document.getElementById('gameModal').style.display = 'flex';
+        }
+
+        async function editGame(gameId) {
+            try {
+                const response = await fetch(`/api/games/${gameId}`);
+                const game = await response.json();
+                
+                document.getElementById('gameModalTitle').textContent = 'Edit Game';
+                document.getElementById('gameId').value = game.id;
+                document.getElementById('gameTitle').value = game.title || '';
+                document.getElementById('gameStatus').value = game.status || 'planning';
+                document.getElementById('gameDescription').value = game.description || '';
+                document.getElementById('gameImageUrl').value = game.image_url || '';
+                document.getElementById('gameRobloxUrl').value = game.roblox_url || '';
+                document.getElementById('gameIsFeatured').checked = game.is_featured || false;
+                document.getElementById('gameDisplayOrder').value = game.display_order || 1;
+                
+                document.getElementById('gameModal').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error loading game:', error);
+                showAlert('Error loading game: ' + error.message, 'danger');
+            }
+        }
+
+        async function saveGame() {
+            try {
+                const gameId = document.getElementById('gameId').value;
+                const gameData = {
+                    title: document.getElementById('gameTitle').value.trim(),
+                    status: document.getElementById('gameStatus').value,
+                    description: document.getElementById('gameDescription').value.trim(),
+                    image_url: document.getElementById('gameImageUrl').value.trim(),
+                    roblox_url: document.getElementById('gameRobloxUrl').value.trim(),
+                    is_featured: document.getElementById('gameIsFeatured').checked,
+                    display_order: parseInt(document.getElementById('gameDisplayOrder').value) || 1,
+                    updated_at: new Date().toISOString()
+                };
+                
+                if (!gameData.title) {
+                    showAlert('Please enter a game title', 'danger');
+                    return;
+                }
+                
+                showAlert('Saving game...', 'info');
+                
+                // If setting as featured, remove featured status from other games
+                if (gameData.is_featured) {
+                    await fetch('/api/games/featured', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ gameId })
+                    });
+                }
+                
+                let result;
+                if (gameId) {
+                    const response = await fetch(`/api/games/${gameId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(gameData)
+                    });
+                    result = await response.json();
+                } else {
+                    const response = await fetch('/api/games', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(gameData)
+                    });
+                    result = await response.json();
+                }
+                
+                showAlert(`Game ${gameId ? 'updated' : 'created'} successfully!`, 'success');
+                closeModal('gameModal');
+                loadAllGames();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Error saving game:', error);
+                showAlert('Error saving game: ' + error.message, 'danger');
+            }
+        }
+
+        async function deleteGame(gameId) {
+            if (!confirm('Are you sure you want to delete this game? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                showAlert('Deleting game...', 'info');
+                
+                const response = await fetch(`/api/games/${gameId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error deleting game');
+                }
+                
+                showAlert('Game deleted successfully!', 'success');
+                loadAllGames();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Error deleting game:', error);
+                showAlert('Error deleting game: ' + error.message, 'danger');
+            }
+        }
+
+        // PROJECTS MANAGEMENT
+        async function loadAllProjects() {
+            try {
+                showAlert('Loading projects...', 'info');
+                
+                const response = await fetch('/api/projects');
+                const projects = await response.json();
+                
+                const projectsList = document.getElementById('projects-list');
+                
+                if (!projects || projects.length === 0) {
+                    projectsList.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.7);">
+                            <h3>No projects found</h3>
+                            <p>Click "Add New Project" to create your first project.</p>
+                        </div>
+                    `;
+                } else {
+                    projectsList.innerHTML = projects.map(project => createProjectCard(project)).join('');
+                }
+                
+                setTimeout(() => removeAlerts(), 500);
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                showAlert('Error loading projects: ' + error.message, 'danger');
+            }
+        }
+
+        function createProjectCard(project) {
+            const statusClass = `status-${project.status.replace('_', '-')}`;
+            const statusText = project.status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            return `
+                <div class="card" data-id="${project.id}">
+                    <div class="card-header">
+                        <div class="card-info">
+                            <h3>${project.name}</h3>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small" onclick="editProject(${project.id})">Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteProject(${project.id})">Delete</button>
+                        </div>
+                    </div>
+                    ${project.description ? `<p class="card-description">${project.description}</p>` : ''}
+                    <div class="card-meta">
+                        <span>Order: ${project.display_order}</span>
+                        <span>Status: ${statusText}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAddProjectModal() {
+            document.getElementById('projectModalTitle').textContent = 'Add New Project';
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.getElementById('projectDisplayOrder').value = 1;
+            document.getElementById('projectModal').style.display = 'flex';
+        }
+
+        async function editProject(projectId) {
+            try {
+                const response = await fetch(`/api/projects/${projectId}`);
+                const project = await response.json();
+                
+                document.getElementById('projectModalTitle').textContent = 'Edit Project';
+                document.getElementById('projectId').value = project.id;
+                document.getElementById('projectName').value = project.name || '';
+                document.getElementById('projectStatus').value = project.status || 'concept';
+                document.getElementById('projectDescription').value = project.description || '';
+                document.getElementById('projectDisplayOrder').value = project.display_order || 1;
+                
+                document.getElementById('projectModal').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error loading project:', error);
+                showAlert('Error loading project: ' + error.message, 'danger');
+            }
+        }
+
+        async function saveProject() {
+            try {
+                const projectId = document.getElementById('projectId').value;
+                const projectData = {
+                    name: document.getElementById('projectName').value.trim(),
+                    status: document.getElementById('projectStatus').value,
+                    description: document.getElementById('projectDescription').value.trim(),
+                    display_order: parseInt(document.getElementById('projectDisplayOrder').value) || 1,
+                    updated_at: new Date().toISOString()
+                };
+                
+                if (!projectData.name) {
+                    showAlert('Please enter a project name', 'danger');
+                    return;
+                }
+                
+                showAlert('Saving project...', 'info');
+                
+                let result;
+                if (projectId) {
+                    const response = await fetch(`/api/projects/${projectId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(projectData)
+                    });
+                    result = await response.json();
+                } else {
+                    const response = await fetch('/api/projects', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(projectData)
+                    });
+                    result = await response.json();
+                }
+                
+                showAlert(`Project ${projectId ? 'updated' : 'created'} successfully!`, 'success');
+                closeModal('projectModal');
+                loadAllProjects();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Error saving project:', error);
+                showAlert('Error saving project: ' + error.message, 'danger');
+            }
+        }
+
+        async function deleteProject(projectId) {
+            if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                showAlert('Deleting project...', 'info');
+                
+                const response = await fetch(`/api/projects/${projectId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error deleting project');
+                }
+                
+                showAlert('Project deleted successfully!', 'success');
+                loadAllProjects();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                showAlert('Error deleting project: ' + error.message, 'danger');
+            }
+        }
+
+        // TEAM MEMBERS MANAGEMENT
+        async function loadAllTeamMembers() {
+            try {
+                showAlert('Loading team members...', 'info');
+                
+                const response = await fetch('/api/team');
+                const teamMembers = await response.json();
+                
+                const teamList = document.getElementById('team-members-list');
+                
+                if (!teamMembers || teamMembers.length === 0) {
+                    teamList.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.7);">
+                            <h3>No team members found</h3>
+                            <p>Click "Add New Team Member" to add your first team member.</p>
+                        </div>
+                    `;
+                } else {
+                    teamList.innerHTML = teamMembers.map(member => createTeamMemberCard(member)).join('');
+                }
+                
+                setTimeout(() => removeAlerts(), 500);
+            } catch (error) {
+                console.error('Error loading team members:', error);
+                showAlert('Error loading team members: ' + error.message, 'danger');
+            }
+        }
+
+        function createTeamMemberCard(member) {
+            return `
+                <div class="card" data-id="${member.id}">
+                    <div class="card-header">
+                        <div class="card-info">
+                            <h3>${member.name}</h3>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span class="status-badge ${member.is_active ? 'status-released' : 'status-planning'}">
+                                    ${member.is_active ? 'Active' : 'Inactive'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small" onclick="editTeamMember(${member.id})">Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteTeamMember(${member.id})">Delete</button>
+                        </div>
+                    </div>
+                    ${member.role ? `<p style="color: #3b82f6; font-weight: 600; margin-bottom: 0.5rem;">${member.role}</p>` : ''}
+                    ${member.bio ? `<p class="card-description">${member.bio}</p>` : ''}
+                    <div class="card-meta">
+                        <span>Order: ${member.display_order}</span>
+                        <span>Status: ${member.is_active ? 'Active' : 'Inactive'}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAddTeamModal() {
+            document.getElementById('teamModalTitle').textContent = 'Add New Team Member';
+            document.getElementById('teamForm').reset();
+            document.getElementById('teamId').value = '';
+            document.getElementById('teamDisplayOrder').value = 1;
+            document.getElementById('teamIsActive').checked = true;
+            document.getElementById('teamModal').style.display = 'flex';
+        }
+
+        async function editTeamMember(memberId) {
+            try {
+                const response = await fetch(`/api/team/${memberId}`);
+                const member = await response.json();
+                
+                document.getElementById('teamModalTitle').textContent = 'Edit Team Member';
+                document.getElementById('teamId').value = member.id;
+                document.getElementById('teamName').value = member.name || '';
+                document.getElementById('teamRole').value = member.role || '';
+                document.getElementById('teamBio').value = member.bio || '';
+                document.getElementById('teamIsActive').checked = member.is_active || false;
+                document.getElementById('teamDisplayOrder').value = member.display_order || 1;
+                
+                document.getElementById('teamModal').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error loading team member:', error);
+                showAlert('Error loading team member: ' + error.message, 'danger');
+            }
+        }
+
+        async function saveTeamMember() {
+            try {
+                const memberId = document.getElementById('teamId').value;
+                const memberData = {
+                    name: document.getElementById('teamName').value.trim(),
+                    role: document.getElementById('teamRole').value.trim(),
+                    bio: document.getElementById('teamBio').value.trim(),
+                    is_active: document.getElementById('teamIsActive').checked,
+                    display_order: parseInt(document.getElementById('teamDisplayOrder').value) || 1,
+                    updated_at: new Date().toISOString()
+                };
+                
+                if (!memberData.name) {
+                    showAlert('Please enter a team member name', 'danger');
+                    return;
+                }
+                
+                showAlert('Saving team member...', 'info');
+                
+                let result;
+                if (memberId) {
+                    const response = await fetch(`/api/team/${memberId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(memberData)
+                    });
+                    result = await response.json();
+                } else {
+                    const response = await fetch('/api/team', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(memberData)
+                    });
+                    result = await response.json();
+                }
+                
+                showAlert(`Team member ${memberId ? 'updated' : 'added'} successfully!`, 'success');
+                closeModal('teamModal');
+                loadAllTeamMembers();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Error saving team member:', error);
+                showAlert('Error saving team member: ' + error.message, 'danger');
+            }
+        }
+
+        async function deleteTeamMember(memberId) {
+            if (!confirm('Are you sure you want to delete this team member? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                showAlert('Deleting team member...', 'info');
+                
+                const response = await fetch(`/api/team/${memberId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error deleting team member');
+                }
+                
+                showAlert('Team member deleted successfully!', 'success');
+                loadAllTeamMembers();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Error deleting team member:', error);
+                showAlert('Error deleting team member: ' + error.message, 'danger');
+            }
+        }
+
+        // HOME CONTENT MANAGEMENT
+        async function loadHomeContent() {
+            try {
+                const response = await fetch('/api/home');
+                const homeData = await response.json();
+                
+                if (homeData) {
+                    document.getElementById('homeHeroTitle').value = homeData.hero_title || '';
+                    document.getElementById('homeHeroSubtitle').value = homeData.hero_subtitle || '';
+                }
+            } catch (error) {
+                console.error('Error loading home content:', error);
+            }
+        }
+
+        async function saveHomeContent() {
+            try {
+                showAlert('Saving home content...', 'info');
+                
+                const data = {
+                    hero_title: document.getElementById('homeHeroTitle').value,
+                    hero_subtitle: document.getElementById('homeHeroSubtitle').value,
+                    updated_at: new Date().toISOString()
+                };
+                
+                const response = await fetch('/api/home', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error saving home content');
+                }
+                
+                showAlert('Home content saved successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error saving home content:', error);
+                showAlert('Error saving home content: ' + error.message, 'danger');
+            }
+        }
+
+        // INFORMATION CONTENT MANAGEMENT
+        async function loadInformationContent() {
+            try {
+                const response = await fetch('/api/information');
+                const infoData = await response.json();
+                
+                if (infoData) {
+                    document.getElementById('infoAboutText').value = infoData.about_text || '';
+                    document.getElementById('infoYearsExp').value = infoData.years_experience || '';
+                    document.getElementById('infoCustomAssets').value = infoData.custom_assets || '';
+                    document.getElementById('infoDiscordUrl').value = infoData.discord_url || '';
+                }
+            } catch (error) {
+                console.error('Error loading information content:', error);
+            }
+        }
+
+        async function saveInformationContent() {
+            try {
+                showAlert('Saving information content...', 'info');
+                
+                const data = {
+                    about_text: document.getElementById('infoAboutText').value,
+                    years_experience: document.getElementById('infoYearsExp').value,
+                    custom_assets: document.getElementById('infoCustomAssets').value,
+                    discord_url: document.getElementById('infoDiscordUrl').value,
+                    updated_at: new Date().toISOString()
+                };
+                
+                const response = await fetch('/api/information', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error saving information content');
+                }
+                
+                showAlert('Information content saved successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error saving information content:', error);
+                showAlert('Error saving information content: ' + error.message, 'danger');
+            }
+        }
+
+        // UTILITY FUNCTIONS
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showAlert(message, type = 'success') {
+            removeAlerts();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            
+            let title = 'Info:';
+            if (type === 'success') title = 'Success!';
+            if (type === 'danger') title = 'Error!';
+            
+            alertDiv.innerHTML = `<strong>${title}</strong> ${message}`;
+            
+            const content = document.querySelector('.content-section.active');
+            content.insertBefore(alertDiv, content.firstChild);
+            
+            if (type !== 'info') {
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, type === 'danger' ? 5000 : 3000);
+            }
+        }
+
+        function removeAlerts() {
+            document.querySelectorAll('.alert').forEach(alert => alert.remove());
+        }
+
+        // Modal event listeners
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        console.log('Atlas Studios Admin Dashboard loaded successfully');
+    </script>
+</body>
+</html>
+            } catch (error) {
+                console.error('Error saving information content:', error);
+                showAlert('Error saving information content: ' + error.message, 'danger');
+            }
+        }
+
+        // UTILITY FUNCTIONS
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showAlert(message, type = 'success') {
+            removeAlerts();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            
+            let title = 'Info:';
+            if (type === 'success') title = 'Success!';
+            if (type === 'danger') title = 'Error!';
+            
+            alertDiv.innerHTML = `<strong>${title}</strong> ${message}`;
+            
+            const content = document.querySelector('.content-section.active');
+            content.insertBefore(alertDiv, content.firstChild);
+            
+            if (type !== 'info') {
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, type === 'danger' ? 5000 : 3000);
+            }
+        }
+
+        function removeAlerts() {
+            document.querySelectorAll('.alert').forEach(alert => alert.remove());
+        }
+
+        // Modal event listeners
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        console.log('Atlas Studios Admin Dashboard loaded successfully');
+    </script>
+</body>
+</html>
