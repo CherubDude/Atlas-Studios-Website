@@ -547,6 +547,8 @@
                     <li><button class="menu-btn active" data-section="overview">Overview</button></li>
                     <li><button class="menu-btn" data-section="home">Home Page</button></li>
                     <li><button class="menu-btn" data-section="games">Games</button></li>
+                    <li><button class="menu-btn" data-section="projects">Projects</button></li>
+                    <li><button class="menu-btn" data-section="team">Team Members</button></li>
                     <li><button class="menu-btn" data-section="gallery">Gallery</button></li>
                     <li><button class="menu-btn" data-section="information">Information</button></li>
                     <li><button class="menu-btn" data-section="settings">Settings</button></li>
@@ -702,6 +704,42 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="closeGameModal()">Cancel</button>
                             <button type="button" class="btn btn-primary" onclick="saveGame()">Save Game</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Section -->
+                <div class="content-section" id="projects">
+                    <h2 class="section-title">Projects Management</h2>
+                    
+                    <!-- Add New Project Button -->
+                    <div class="form-actions" style="margin-bottom: 2rem; justify-content: flex-start;">
+                        <button type="button" class="btn btn-primary" onclick="showAddProjectModal()">Add New Project</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadAllProjects()">Refresh Projects</button>
+                    </div>
+                    
+                    <!-- Projects List -->
+                    <div id="projects-list">
+                        <div class="loading-placeholder" style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.7);">
+                            Loading projects...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Members Section -->
+                <div class="content-section" id="team">
+                    <h2 class="section-title">Team Members Management</h2>
+                    
+                    <!-- Add New Team Member Button -->
+                    <div class="form-actions" style="margin-bottom: 2rem; justify-content: flex-start;">
+                        <button type="button" class="btn btn-primary" onclick="showAddTeamModal()">Add New Team Member</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadAllTeamMembers()">Refresh Team</button>
+                    </div>
+                    
+                    <!-- Team Members List -->
+                    <div id="team-members-list">
+                        <div class="loading-placeholder" style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.7);">
+                            Loading team members...
                         </div>
                     </div>
                 </div>
