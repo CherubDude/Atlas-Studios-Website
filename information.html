@@ -153,7 +153,7 @@
                             </svg>
                         </div>
                     </div>
-                    <h3>CherubDude</h3>
+                    <h3>Lead Developer</h3>
                     <p class="member-role">Founder & CEO</p>
                     <p class="member-bio">Passionate about aviation and game development with extensive Roblox experience.</p>
                 </div>
@@ -167,8 +167,8 @@
                             </svg>
                         </div>
                     </div>
-                    <h3>Hirring</h3>
-                    <p class="member-role">3D Modeler</p>
+                    <h3>3D Artist</h3>
+                    <p class="member-role">Asset Designer</p>
                     <p class="member-bio">Creates stunning 3D models and environments that bring our worlds to life.</p>
                 </div>
 
@@ -181,9 +181,9 @@
                             </svg>
                         </div>
                     </div>
-                    <h3>Hirring</h3>
-                    <p class="member-role">Scripter</p>
-                    <p class="member-bio">Scripts engaging gameplay mechanics and user experiences.</p>
+                    <h3>Game Designer</h3>
+                    <p class="member-role">Systems Architect</p>
+                    <p class="member-bio">Designs engaging gameplay mechanics and user experiences.</p>
                 </div>
             </div>
         </div>
@@ -235,6 +235,73 @@
         </div>
     </section>
 
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://pgxlynzlilebnplprgyl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBneGx5bnpsaWxlYm5wbHByZ3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MDk4MjQsImV4cCI6MjA3MDI4NTgyNH0.j2FVLiFWF4ZjtFa0m2lolepcWfI8xObvgDTbAjcYe7U';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Load dynamic content on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadInformationContent();
+        });
+        
+        async function loadInformationContent() {
+            try {
+                // Load information content from Supabase
+                const { data: infoData, error } = await supabase
+                    .from('information_content')
+                    .select('*')
+                    .single();
+                
+                if (infoData && !error) {
+                    // Update about text
+                    const aboutText = document.querySelector('.about-text');
+                    if (aboutText && infoData.about_text) {
+                        aboutText.textContent = infoData.about_text;
+                    }
+                    
+                    // Update stats
+                    const yearsElement = document.querySelector('.stat-number');
+                    const assetsElement = document.querySelectorAll('.stat-number')[1];
+                    
+                    if (yearsElement && infoData.years_experience) {
+                        yearsElement.textContent = infoData.years_experience;
+                    }
+                    if (assetsElement && infoData.custom_assets) {
+                        assetsElement.textContent = infoData.custom_assets;
+                    }
+                    
+                    // Update Discord URL if present
+                    if (infoData.discord_url) {
+                        const discordBtn = document.querySelector('button[onclick*="discord.gg"]');
+                        if (discordBtn) {
+                            discordBtn.setAttribute('onclick', `window.open('${infoData.discord_url}', '_blank')`);
+                        }
+                    }
+                }
+                
+                // Load team members if available
+                const { data: teamData, error: teamError } = await supabase
+                    .from('team_members')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('display_order', { ascending: true });
+                
+                if (teamData && !teamError && teamData.length > 0) {
+                    // You can add team member display logic here if needed
+                    console.log('Team members loaded:', teamData);
+                }
+                
+            } catch (error) {
+                console.error('Error loading information content:', error);
+                // Fallback to default content if database fails
+            }
+        }
+    </script>
     <script src="script.js"></script>
     <style>
         /* Information page specific styles */
@@ -582,73 +649,6 @@
             transition: transform 0.2s ease;
         }
 
-        .submit-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .nav-link.active {
-            color: #3b82f6;
-        }
-
-        @media (max-width: 768px) {
-            .about-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-        }
-    </style>
-
-    <script>
-        // Contact form handling
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('.form');
-            
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Get form data
-                const formData = new FormData(form);
-                const data = {};
-                for (let [key, value] of formData.entries()) {
-                    data[key] = value;
-                }
-                
-                // Simulate form submission
-                const submitBtn = document.querySelector('.submit-btn');
-                const originalText = submitBtn.textContent;
-                
-                submitBtn.textContent = 'Sending...';
-                submitBtn.disabled = true;
-                
-                // Simulate API call
-                setTimeout(() => {
-                    submitBtn.textContent = 'Message Sent!';
-                    form.reset();
-                    
-                    setTimeout(() => {
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
-                    }, 2000);
-                }, 1000);
-            });
-        });
-    </script>
-</body>
-</html>
         .submit-btn:hover {
             transform: translateY(-1px);
         }
