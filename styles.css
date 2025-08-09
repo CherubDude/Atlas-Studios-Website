@@ -155,6 +155,7 @@ body {
 
 .showcase-logo {
     border-radius: 10px;
+    z-index: 9;
     height: 180px;
     width: auto;
 }
