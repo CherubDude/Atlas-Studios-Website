@@ -100,7 +100,7 @@ body {
 }
 
 .highlight {
-    background: linear-gradient(135deg, #f1c605, #af6b1e);
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -147,14 +147,14 @@ body {
     transform: translate(-50%, -50%);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
-    border-radius: 2px;
-    padding: 2rem;
+    border-radius: 16px;
+    padding: 3rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     z-index: 10;
 }
 
 .showcase-logo {
-    height: 90px;
+    height: 120px;
     width: auto;
 }
 
@@ -268,11 +268,11 @@ body {
     }
     
     .showcase-card {
-        padding: 5rem;
+        padding: 2rem;
     }
     
     .showcase-logo {
-        height: 180px;
+        height: 90px;
     }
     
     .features {
