@@ -1,20 +1,22 @@
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function() {
-    // Navigation functionality
+    // Navigation functionality - simplified for GitHub Pages compatibility
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             
-            // Allow normal navigation to other pages
-            if (href && href !== '#' && href !== window.location.pathname) {
-                return; // Let the browser handle the navigation
-            }
-            
-            // Only prevent default for same-page links or anchors
-            if (href === '#' || href.startsWith('#')) {
+            // Only prevent default for anchor links (same page)
+            if (href && href.startsWith('#')) {
                 e.preventDefault();
+                // Handle smooth scrolling for anchor links if needed
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
             }
+            // Let all other links (page navigation) work normally
         });
     });
 
@@ -48,14 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
         lastScrollTop = scrollTop;
     });
 
-    // Add click effect to join button
-    const joinBtn = document.querySelector('.join-btn');
-    if (joinBtn) {
-        joinBtn.addEventListener('click', function() {
-            // Redirect to Discord server
-            window.open('https://discord.gg/WgRm5Kx3FM', '_blank');
-        });
-    }
+    // Join button is handled via onclick attribute in HTML
+    // No additional JavaScript needed
 
     // Add parallax effect to hero section
     const hero = document.querySelector('.hero');
