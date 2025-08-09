@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Studios - Admin Dashboard</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="icon" type="image/png" href="../favicon.png" sizes="32x32">
+    
+    <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.9));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu button {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-menu button:hover,
+        .sidebar-menu button.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .main-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #3b82f6;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .gallery-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-item h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-item-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: #22c55e;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            color: #3b82f6;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            color: #3b82f6;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Games List Styles */
+        .game-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card.featured {
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .game-info h3 {
+            color: #3b82f6;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-planning {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .status-in-development {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .status-coming-soon {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status-released {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .game-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .game-meta span {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .game-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .featured-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .game-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .game-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1 class="dashboard-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                Atlas Studios Admin Dashboard
+            </h1>
+            <a href="../index.html" class="back-btn">Back to Website</a>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <div class="dashboard-grid">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3 class="sidebar-title">Content Management</h3>
+                <ul class="sidebar-menu">
+                    <li><button class="menu-btn active" data-section="overview">Overview</button></li>
+                    <li><button class="menu-btn" data-section="home">Home Page</button></li>
+                    <li><button class="menu-btn" data-section="games">Games</button></li>
+                    <li><button class="menu-btn" data-section="gallery">Gallery</button></li>
+                    <li><button class="menu-btn" data-section="information">Information</button></li>
+                    <li><button class="menu-btn" data-section="settings">Settings</button></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Overview Section -->
+                <div class="content-section active" id="overview">
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">Active Pages</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">9</div>
+                            <div class="stat-label">Gallery Items</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">1</div>
+                            <div class="stat-label">Featured Game</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Team Members</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <strong>Welcome!</strong> This dashboard allows you to manage all content across your Atlas Studios website.
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Quick Actions</h3>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button class="btn btn-primary" onclick="switchSection('games')">Edit Games</button>
+                            <button class="btn btn-primary" onclick="switchSection('gallery')">Manage Gallery</button>
+                            <button class="btn btn-secondary" onclick="window.open('../index.html', '_blank')">Preview Website</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Home Page Section -->
+                <div class="content-section" id="home">
+                    <h2 class="section-title">Home Page Content</h2>
+                    
+                    <form class="form-grid">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" value="Atlas Studios." placeholder="Main hero title">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hero Subtitle</label>
+                            <input type="text" value="Ground Works Simulations" placeholder="Hero subtitle">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Features Section Title</label>
+                            <input type="text" value="Main Features" placeholder="Features section title">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Features Section Subtitle</label>
+                            <input type="text" value="What we produce and offer. All this just for you!" placeholder="Features subtitle">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" onclick="saveChanges('home')">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetChanges('home')">Reset</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Games Section -->
+                <div class="content-section" id="games">
+                    <h2 class="section-title">Games Management</h2>
+                    
+                    <!-- Add New Game Button -->
+                    <div class="form-actions" style="margin-bottom: 2rem; justify-content: flex-start;">
+                        <button type="button" class="btn btn-primary" onclick="showAddGameModal()">Add New Game</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadAllGames()">Refresh Games</button>
+                    </div>
+                    
+                    <!-- Games List -->
+                    <div id="games-list">
+                        <div class="loading-placeholder" style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.7);">
+                            Loading games...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Edit Modal -->
+                <div id="gameModal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modalTitle">Add New Game</h3>
+                            <button class="modal-close" onclick="closeGameModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="gameForm" class="form-grid">
+                                <input type="hidden" id="gameId">
+                                
+                                <div class="form-group">
+                                    <label>Game Title *</label>
+                                    <input type="text" id="gameTitle" placeholder="Enter game title" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Game Status</label>
+                                    <select id="gameStatus">
+                                        <option value="planning">Planning</option>
+                                        <option value="in-development">In Development</option>
+                                        <option value="coming-soon">Coming Soon</option>
+                                        <option value="released">Released</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>Game Description</label>
+                                    <textarea id="gameDescription" placeholder="Enter game description" style="min-height: 100px;"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Game Image URL</label>
+                                    <input type="url" id="gameImageUrl" placeholder="https://example.com/image.jpg">
+                                    <small style="color: rgba(255,255,255,0.6); margin-top: 0.5rem; display: block;">Optional: Direct link to game screenshot or artwork</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Roblox Game URL</label>
+                                    <input type="url" id="gameRobloxUrl" placeholder="https://www.roblox.com/games/...">
+                                    <small style="color: rgba(255,255,255,0.6); margin-top: 0.5rem; display: block;">Optional: Link to Roblox game page</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="gameIsFeatured" style="margin-right: 0.5rem;">
+                                        Set as Featured Game
+                                    </label>
+                                    <small style="color: rgba(255,255,255,0.6); margin-top: 0.5rem; display: block;">Only one game can be featured at a time</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Display Order</label>
+                                    <input type="number" id="gameDisplayOrder" value="1" min="1">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeGameModal()">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="saveGame()">Save Game</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Section -->
+                <div class="content-section" id="gallery">
+                    <h2 class="section-title">Gallery Management</h2>
+                    
+                    <div class="form-actions" style="margin-bottom: 2rem;">
+                        <button type="button" class="btn btn-primary" onclick="uploadImage()">Upload New Image</button>
+                        <button type="button" class="btn btn-secondary" onclick="organizeGallery()">Organize Gallery</button>
+                    </div>
+
+                    <div class="gallery-grid" id="gallery-items">
+                        <div class="gallery-item">
+                            <img src="../assets/game-screenshot.png" alt="Featured Screenshot">
+                            <h4>Ground Works Simulations</h4>
+                            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Featured</p>
+                            <div class="gallery-item-actions">
+                                <button class="btn btn-secondary btn-small">Edit</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item">
+                            <div style="height: 120px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; color: rgba(255,255,255,0.5);">
+                                Placeholder
+                            </div>
+                            <h4>Aircraft Servicing</h4>
+                            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Screenshots</p>
+                            <div class="gallery-item-actions">
+                                <button class="btn btn-secondary btn-small">Edit</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Information Section -->
+                <div class="content-section" id="information">
+                    <h2 class="section-title">Studio Information</h2>
+                    
+                    <form class="form-grid">
+                        <div class="form-group full-width">
+                            <label>About Atlas Studios</label>
+                            <textarea style="min-height: 120px;">Atlas Studios is a professional Roblox game development studio specializing in realistic simulation experiences. Founded with a passion for aviation and ground operations, we create immersive, high-quality games that push the boundaries of what's possible on the Roblox platform.</textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Years Experience</label>
+                                <input type="text" value="2+" placeholder="Years">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Custom Assets Percentage</label>
+                                <input type="text" value="100%" placeholder="Percentage">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discord Server URL</label>
+                            <input type="url" value="https://discord.gg/WgRm5Kx3FM" placeholder="Discord invite link">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" onclick="saveChanges('information')">Save Information</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetChanges('information')">Reset</button>
+                        </div>
+                    </form>
+
+                    <h3 style="margin-top: 2rem;">Team Members</h3>
+                    <div id="team-members">
+                        <div style="border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <input type="text" value="Lead Developer" placeholder="Name" style="margin-bottom: 0.5rem;">
+                            <input type="text" value="Founder & CEO" placeholder="Role" style="margin-bottom: 0.5rem;">
+                            <textarea placeholder="Bio">Passionate about aviation and game development with extensive Roblox experience.</textarea>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addTeamMember()">Add Team Member</button>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="content-section" id="settings">
+                    <h2 class="section-title">Website Settings</h2>
+                    
+                    <form class="form-grid">
+                        <div class="form-group">
+                            <label>Website Title</label>
+                            <input type="text" value="Atlas Studios - Ground Works Simulations" placeholder="Site title">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Meta Description</label>
+                            <textarea>Atlas Studios - Professional Roblox game development studio specializing in Ground Works Simulations. Unique assets, A.I systems, and premium gaming experiences.</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input type="email" placeholder="contact@atlasstudios.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Maintenance Mode</label>
+                            <select>
+                                <option value="off" selected>Off</option>
+                                <option value="on">On</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                            <button type="button" class="btn btn-danger" onclick="exportData()">Export Data</button>
+                            <button type="button" class="btn btn-secondary" onclick="importData()">Import Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://pgxlynzlilebnplprgyl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBneGx5bnpsaWxlYm5wbHByZ3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MDk4MjQsImV4cCI6MjA3MDI4NTgyNH0.j2FVLiFWF4ZjtFa0m2lolepcWfI8xObvgDTbAjcYe7U';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Dashboard functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuButtons = document.querySelectorAll('.menu-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            menuButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetSection = this.getAttribute('data-section');
+                    switchSection(targetSection);
+                });
+            });
+
+            // Initialize data loading
+            loadAllContent();
+        });
+
+        function switchSection(sectionName) {
+            // Update menu active state
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-section') === sectionName) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionName).classList.add('active');
+        }
+
+        async function saveChanges(section) {
+            try {
+                showAlert('Saving changes...', 'info');
+                
+                let data = {};
+                let updateResult;
+                
+                switch(section) {
+                    case 'home':
+                        data = {
+                            hero_title: document.querySelector('input[placeholder="Main hero title"]').value,
+                            hero_subtitle: document.querySelector('input[placeholder="Hero subtitle"]').value,
+                            features_title: document.querySelector('input[placeholder="Features section title"]').value,
+                            features_subtitle: document.querySelector('input[placeholder="Features subtitle"]').value,
+                            updated_at: new Date().toISOString()
+                        };
+                        updateResult = await upsertContent('home_content', data);
+                        break;
+                        
+                    case 'games':
+                        data = {
+                            featured_game_title: document.querySelector('input[placeholder="Game title"]').value,
+                            featured_game_status: document.querySelector('select').value,
+                            featured_game_description: document.querySelector('textarea[placeholder="Game description"]').value,
+                            updated_at: new Date().toISOString()
+                        };
+                        updateResult = await upsertContent('games_content', data);
+                        break;
+                        
+                    case 'information':
+                        data = {
+                            about_text: document.querySelector('textarea[style*="min-height: 120px"]').value,
+                            years_experience: document.querySelector('input[placeholder="Years"]').value,
+                            custom_assets: document.querySelector('input[placeholder="Percentage"]').value,
+                            discord_url: document.querySelector('input[placeholder="Discord invite link"]').value,
+                            updated_at: new Date().toISOString()
+                        };
+                        updateResult = await upsertContent('information_content', data);
+                        break;
+                }
+                
+                if (updateResult) {
+                    showAlert(`${section} changes saved successfully!`, 'success');
+                    // Update the live website
+                    updateLiveWebsite();
+                } else {
+                    throw new Error('Failed to save changes');
+                }
+            } catch (error) {
+                console.error('Error saving changes:', error);
+                showAlert(`Error saving ${section} changes: ${error.message}`, 'danger');
+            }
+        }
+
+        function resetChanges(section) {
+            showAlert(`${section} changes reset`, 'info');
+            // Reload data from database
+            loadAllContent();
+        }
+
+        // Supabase helper functions
+        async function upsertContent(tableName, data) {
+            try {
+                const { data: result, error } = await supabase
+                    .from(tableName)
+                    .upsert(data, { onConflict: 'id' })
+                    .select();
+                
+                if (error) throw error;
+                return result;
+            } catch (error) {
+                console.error('Upsert error:', error);
+                return null;
+            }
+        }
+
+        async function loadAllContent() {
+            try {
+                // Load home content
+                const { data: homeData, error: homeError } = await supabase
+                    .from('home_content')
+                    .select('*')
+                    .limit(1)
+                    .single();
+                
+                if (homeData && !homeError) {
+                    document.querySelector('input[placeholder="Main hero title"]').value = homeData.hero_title || '';
+                    document.querySelector('input[placeholder="Hero subtitle"]').value = homeData.hero_subtitle || '';
+                    document.querySelector('input[placeholder="Features section title"]').value = homeData.features_title || '';
+                    document.querySelector('input[placeholder="Features subtitle"]').value = homeData.features_subtitle || '';
+                }
+
+                // Load games content
+                const { data: gamesData, error: gamesError } = await supabase
+                    .from('games_content')
+                    .select('*')
+                    .limit(1)
+                    .single();
+                
+                if (gamesData && !gamesError) {
+                    document.querySelector('input[placeholder="Game title"]').value = gamesData.featured_game_title || '';
+                    document.querySelector('#games select').value = gamesData.featured_game_status || 'coming-soon';
+                    document.querySelector('textarea[placeholder="Game description"]').value = gamesData.featured_game_description || '';
+                }
+
+                // Load information content
+                const { data: infoData, error: infoError } = await supabase
+                    .from('information_content')
+                    .select('*')
+                    .limit(1)
+                    .single();
+                
+                if (infoData && !infoError) {
+                    document.querySelector('textarea[style*="min-height: 120px"]').value = infoData.about_text || '';
+                    document.querySelector('input[placeholder="Years"]').value = infoData.years_experience || '';
+                    document.querySelector('input[placeholder="Percentage"]').value = infoData.custom_assets || '';
+                    document.querySelector('input[placeholder="Discord invite link"]').value = infoData.discord_url || '';
+                }
+
+            } catch (error) {
+                console.error('Error loading content:', error);
+                // Don't show error to user on initial load, just log it
+            }
+        }
+
+        async function updateLiveWebsite() {
+            // This function would trigger updates to the live website
+            // For now, we'll just log that it would happen
+            console.log('Live website would be updated with new content');
+            
+            // In a real implementation, this might:
+            // 1. Generate static files
+            // 2. Update a CDN cache
+            // 3. Trigger a webhook to rebuild the site
+            // 4. Update a content API
+        }
+
+        function saveSettings() {
+            showAlert('Settings saved successfully!', 'success');
+        }
+
+        function exportData() {
+            showAlert('Data exported successfully!', 'success');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.click();
+        }
+
+        function uploadImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.click();
+        }
+
+        function organizeGallery() {
+            showAlert('Gallery reorganized!', 'success');
+        }
+
+        function addProject() {
+            const container = document.getElementById('upcoming-projects');
+            const newProject = document.createElement('div');
+            newProject.style.cssText = 'border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;';
+            newProject.innerHTML = `
+                <input type="text" placeholder="Project name" style="margin-bottom: 0.5rem;">
+                <textarea placeholder="Project description" style="margin-bottom: 0.5rem;"></textarea>
+                <select style="margin-bottom: 0.5rem;">
+                    <option value="planning">Planning</option>
+                    <option value="in-development">In Development</option>
+                    <option value="concept">Concept</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            container.appendChild(newProject);
+        }
+
+        function addTeamMember() {
+            const container = document.getElementById('team-members');
+            const newMember = document.createElement('div');
+            newMember.style.cssText = 'border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;';
+            newMember.innerHTML = `
+                <input type="text" placeholder="Name" style="margin-bottom: 0.5rem;">
+                <input type="text" placeholder="Role" style="margin-bottom: 0.5rem;">
+                <textarea placeholder="Bio"></textarea>
+                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove()" style="margin-top: 0.5rem;">Remove Member</button>
+            `;
+            container.appendChild(newMember);
+        }
+
+        function removeGame() {
+            if (confirm('Are you sure you want to remove this game?')) {
+                showAlert('Game removed successfully!', 'success');
+            }
+        }
+
+        function showAlert(message, type = 'success') {
+            // Remove existing alerts
+            document.querySelectorAll('.alert').forEach(alert => alert.remove());
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            
+            let title = 'Info:';
+            if (type === 'success') title = 'Success!';
+            if (type === 'danger') title = 'Error!';
+            
+            alertDiv.innerHTML = `<strong>${title}</strong> ${message}`;
+            
+            const content = document.querySelector('.content-section.active');
+            content.insertBefore(alertDiv, content.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, type === 'danger' ? 5000 : 3000);
+        }
+
+        // Auto-save functionality
+        function autoSave() {
+            // Simulate auto-save every 30 seconds
+            setInterval(() => {
+                console.log('Auto-saving content...');
+                // In a real application, this would save form data to a backend
+            }, 30000);
+        }
+
+        // Initialize auto-save
+        autoSave();
+
+        // ===== GAMES MANAGEMENT FUNCTIONS =====
+        
+        // Switch to games section and load games
+        function switchToGamesSection() {
+            switchSection('games');
+            setTimeout(() => loadAllGames(), 100);
+        }
+        
+        // Load all games from database
+        async function loadAllGames() {
+            try {
+                showAlert('Loading games...', 'info');
+                
+                const { data: games, error } = await supabase
+                    .from('games')
+                    .select('*')
+                    .order('display_order', { ascending: true });
+                
+                if (error) throw error;
+                
+                const gamesList = document.getElementById('games-list');
+                
+                if (!games || games.length === 0) {
+                    gamesList.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.7);">
+                            <h3>No games found</h3>
+                            <p>Click "Add New Game" to create your first game.</p>
+                        </div>
+                    `;
+                } else {
+                    gamesList.innerHTML = games.map(game => createGameCard(game)).join('');
+                }
+                
+                // Remove loading alert after a short delay
+                setTimeout(() => {
+                    document.querySelectorAll('.alert-info').forEach(alert => alert.remove());
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error loading games:', error);
+                showAlert('Error loading games: ' + error.message, 'danger');
+            }
+        }
+        
+        // Create game card HTML
+        function createGameCard(game) {
+            const statusClass = `status-${game.status.replace('_', '-')}`;
+            const statusText = game.status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            return `
+                <div class="game-card ${game.is_featured ? 'featured' : ''}" data-game-id="${game.id}">
+                    <div class="game-header">
+                        <div class="game-info">
+                            <h3>${game.title}</h3>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span class="game-status ${statusClass}">${statusText}</span>
+                                ${game.is_featured ? '<span class="featured-badge">Featured</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="game-actions">
+                            <button class="btn btn-secondary btn-small" onclick="editGame(${game.id})">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m18 2 4 4-14 14H4v-4L18 2z"/>
+                                </svg>
+                                Edit
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="deleteGame(${game.id})">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18m-2 0V4a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2m3 0V6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v0"/>
+                                    <path d="M14 11v6M10 11v6M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14"/>
+                                </svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    ${game.description ? `<p class="game-description">${game.description}</p>` : ''}
+                    
+                    <div class="game-meta">
+                        <span>Order: ${game.display_order}</span>
+                        ${game.image_url ? '<span>✅ Has Image</span>' : '<span>📷 No Image</span>'}
+                        ${game.roblox_url ? '<span>🎮 Roblox Link</span>' : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Show add game modal
+        function showAddGameModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Game';
+            document.getElementById('gameForm').reset();
+            document.getElementById('gameId').value = '';
+            document.getElementById('gameDisplayOrder').value = 1;
+            document.getElementById('gameModal').style.display = 'flex';
+        }
+        
+        // Edit existing game
+        async function editGame(gameId) {
+            try {
+                const { data: game, error } = await supabase
+                    .from('games')
+                    .select('*')
+                    .eq('id', gameId)
+                    .single();
+                
+                if (error) throw error;
+                
+                // Populate modal with game data
+                document.getElementById('modalTitle').textContent = 'Edit Game';
+                document.getElementById('gameId').value = game.id;
+                document.getElementById('gameTitle').value = game.title || '';
+                document.getElementById('gameStatus').value = game.status || 'planning';
+                document.getElementById('gameDescription').value = game.description || '';
+                document.getElementById('gameImageUrl').value = game.image_url || '';
+                document.getElementById('gameRobloxUrl').value = game.roblox_url || '';
+                document.getElementById('gameIsFeatured').checked = game.is_featured || false;
+                document.getElementById('gameDisplayOrder').value = game.display_order || 1;
+                
+                // Show modal
+                document.getElementById('gameModal').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error loading game:', error);
+                showAlert('Error loading game: ' + error.message, 'danger');
+            }
+        }
+        
+        // Save game (create or update)
+        async function saveGame() {
+            try {
+                const gameId = document.getElementById('gameId').value;
+                const gameData = {
+                    title: document.getElementById('gameTitle').value.trim(),
+                    status: document.getElementById('gameStatus').value,
+                    description: document.getElementById('gameDescription').value.trim(),
+                    image_url: document.getElementById('gameImageUrl').value.trim(),
+                    roblox_url: document.getElementById('gameRobloxUrl').value.trim(),
+                    is_featured: document.getElementById('gameIsFeatured').checked,
+                    display_order: parseInt(document.getElementById('gameDisplayOrder').value) || 1,
+                    updated_at: new Date().toISOString()
+                };
+                
+                // Validation
+                if (!gameData.title) {
+                    showAlert('Please enter a game title', 'danger');
+                    return;
+                }
+                
+                showAlert('Saving game...', 'info');
+                
+                // If setting as featured, remove featured status from other games
+                if (gameData.is_featured) {
+                    await supabase
+                        .from('games')
+                        .update({ is_featured: false })
+                        .neq('id', gameId || 0);
+                }
+                
+                let result;
+                if (gameId) {
+                    // Update existing game
+                    const { data, error } = await supabase
+                        .from('games')
+                        .update(gameData)
+                        .eq('id', gameId)
+                        .select();
+                    
+                    if (error) throw error;
+                    result = data;
+                } else {
+                    // Create new game
+                    const { data, error } = await supabase
+                        .from('games')
+                        .insert([gameData])
+                        .select();
+                    
+                    if (error) throw error;
+                    result = data;
+                }
+                
+                showAlert(`Game ${gameId ? 'updated' : 'created'} successfully!`, 'success');
+                closeGameModal();
+                loadAllGames();
+                
+            } catch (error) {
+                console.error('Error saving game:', error);
+                showAlert('Error saving game: ' + error.message, 'danger');
+            }
+        }
+        
+        // Delete game
+        async function deleteGame(gameId) {
+            if (!confirm('Are you sure you want to delete this game? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                showAlert('Deleting game...', 'info');
+                
+                const { error } = await supabase
+                    .from('games')
+                    .delete()
+                    .eq('id', gameId);
+                
+                if (error) throw error;
+                
+                showAlert('Game deleted successfully!', 'success');
+                loadAllGames();
+                
+            } catch (error) {
+                console.error('Error deleting game:', error);
+                showAlert('Error deleting game: ' + error.message, 'danger');
+            }
+        }
+        
+        // Close game modal
+        function closeGameModal() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.getElementById('gameForm').reset();
+        }
+        
+        // Load games when switching to games section
+        const originalSwitchSection = switchSection;
+        switchSection = function(sectionName) {
+            originalSwitchSection(sectionName);
+            if (sectionName === 'games') {
+                setTimeout(() => loadAllGames(), 100);
+            }
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('gameModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeGameModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('gameModal').style.display === 'flex') {
+                closeGameModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Atlas Studios Gallery - Visual showcase of our game development work, screenshots, and behind-the-scenes content.">
+    <meta name="keywords" content="Atlas Studios, Gallery, Screenshots, Game Development, Roblox, Visual Content">
+    <meta name="author" content="Atlas Studios">
+    
+    <title>Gallery - Atlas Studios</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="shortcut icon" href="favicon.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Gallery - Atlas Studios">
+    <meta property="og:description" content="Visual showcase of our game development work and projects.">
+    <meta property="og:image" content="assets/atlas-logo-card.png">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <img src="assets/atlas-logo.png" alt="Atlas Studios" class="logo">
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="games.html" class="nav-link">Games</a>
+                <a href="gallery.html" class="nav-link active">Gallery</a>
+                <a href="information.html" class="nav-link">Information</a>
+            </div>
+            <div class="nav-cta">
+                <button class="join-btn">
+                    Join Now!
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">Our <span class="highlight">Gallery</span></h1>
+            <p class="page-subtitle">A visual journey through our creative process and achievements</p>
+        </div>
+    </section>
+
+    <!-- Gallery Filters -->
+    <section class="gallery-filters">
+        <div class="filters-container">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="screenshots">Screenshots</button>
+            <button class="filter-btn" data-filter="concept-art">Concept Art</button>
+            <button class="filter-btn" data-filter="behind-scenes">Behind the Scenes</button>
+            <button class="filter-btn" data-filter="assets">Assets</button>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-section">
+        <div class="gallery-container">
+            <div class="gallery-grid" id="galleryGrid">
+                
+                <!-- Featured Image - Your actual game screenshot -->
+                <div class="gallery-item featured" data-category="screenshots">
+                    <div class="gallery-image">
+                        <img src="assets/game-screenshot.png" alt="Ground Works Simulations - Airport Scene" loading="lazy">
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>Ground Works Simulations</h3>
+                                <p>Main airport scene with realistic aircraft and terminal buildings</p>
+                                <span class="gallery-tag">Featured</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder Gallery Items -->
+                <div class="gallery-item" data-category="screenshots">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21,15 16,10 5,21"/>
+                            </svg>
+                            <span>Game Screenshot</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>Aircraft Servicing</h3>
+                                <p>Ground crew operations in action</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="concept-art">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span>Concept Art</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>Terminal Design</h3>
+                                <p>Early concept sketches for airport terminal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="screenshots">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                                <polyline points="7.5,4.21 12,6.81 16.5,4.21"/>
+                            </svg>
+                            <span>Aircraft View</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>A.I Aircraft System</h3>
+                                <p>Autonomous aircraft operations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="behind-scenes">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z"/>
+                                <circle cx="12" cy="13" r="4"/>
+                            </svg>
+                            <span>Development</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>Studio Workspace</h3>
+                                <p>Behind the scenes development process</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="assets">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12,2 2,7 12,12 22,7 12,2"/>
+                                <polyline points="2,17 12,22 22,17"/>
+                                <polyline points="2,12 12,17 22,12"/>
+                            </svg>
+                            <span>3D Assets</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>Ground Equipment</h3>
+                                <p>Custom 3D models and assets</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="concept-art">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span>Design Doc</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>UI/UX Designs</h3>
+                                <p>Interface and user experience concepts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="screenshots">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                            </svg>
+                            <span>Team Play</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>Multiplayer Action</h3>
+                                <p>Team coordination in ground operations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="assets">
+                    <div class="gallery-image">
+                        <div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            <span>Animations</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-info">
+                                <h3>Character Animations</h3>
+                                <p>Smooth character movement and actions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </div>
+                <h3>No items found</h3>
+                <p>Try selecting a different category</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://pgxlynzlilebnplprgyl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBneGx5bnpsaWxlYm5wbHByZ3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MDk4MjQsImV4cCI6MjA3MDI4NTgyNH0.j2FVLiFWF4ZjtFa0m2lolepcWfI8xObvgDTbAjcYe7U';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Load dynamic content on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadGalleryContent();
+            initializeFilters();
+        });
+        
+        async function loadGalleryContent() {
+            try {
+                // Load gallery content from Supabase
+                const { data: galleryData, error } = await supabase
+                    .from('gallery_content')
+                    .select('*')
+                    .order('display_order', { ascending: true });
+                
+                if (galleryData && !error && galleryData.length > 0) {
+                    const galleryGrid = document.getElementById('galleryGrid');
+                    if (galleryGrid) {
+                        // Clear existing placeholder items
+                        galleryGrid.innerHTML = '';
+                        
+                        // Add gallery items from database
+                        galleryData.forEach(item => {
+                            const galleryItem = createGalleryItem(item);
+                            galleryGrid.appendChild(galleryItem);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading gallery content:', error);
+                // Fallback to default static content if database fails
+            }
+        }
+        
+        function createGalleryItem(item) {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = `gallery-item ${item.is_featured ? 'featured' : ''}`;
+            galleryItem.setAttribute('data-category', item.category || 'screenshots');
+            
+            const hasImage = item.image_url && item.image_url.trim() !== '';
+            
+            galleryItem.innerHTML = `
+                <div class="gallery-image">
+                    ${hasImage ? 
+                        `<img src="${item.image_url}" alt="${item.title}" loading="lazy">` :
+                        `<div class="placeholder-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21,15 16,10 5,21"/>
+                            </svg>
+                            <span>${item.title}</span>
+                        </div>`
+                    }
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>${item.title}</h3>
+                            <p>${item.description || 'Atlas Studios creation'}</p>
+                            ${item.is_featured ? '<span class="gallery-tag">Featured</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return galleryItem;
+        }
+        
+        function initializeFilters() {
+            // Gallery filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const emptyState = document.getElementById('emptyState');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.getAttribute('data-filter');
+                    
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Filter gallery items
+                    let visibleCount = 0;
+                    galleryItems.forEach(item => {
+                        const category = item.getAttribute('data-category');
+                        if (filter === 'all' || category === filter) {
+                            item.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show/hide empty state
+                    if (visibleCount === 0) {
+                        emptyState.style.display = 'block';
+                    } else {
+                        emptyState.style.display = 'none';
+                    }
+                });
+            });
+        }
+    </script>
+    <script src="script.js"></script>
+    <style>
+        /* Gallery-specific styles */
+        .page-header {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.1), rgba(59, 130, 246, 0.05));
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .gallery-filters {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .filters-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #3b82f6;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .gallery-section {
+            padding: 2rem;
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .gallery-item.featured {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-image {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            background: linear-gradient(135deg, #1e293b, #334155);
+        }
+
+        .gallery-item.featured .gallery-image {
+            aspect-ratio: 16/9;
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .placeholder-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+        }
+
+        .placeholder-image span {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item:hover .gallery-image img {
+            transform: scale(1.05);
+        }
+
+        .gallery-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .gallery-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+
+        .gallery-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-icon {
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link.active {
+            color: #3b82f6;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-item.featured {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+
+            .filters-container {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Gallery filtering functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const emptyState = document.getElementById('emptyState');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Get filter value
+                    const filterValue = this.getAttribute('data-filter');
+
+                    // Filter items
+                    let visibleCount = 0;
+                    galleryItems.forEach(item => {
+                        const category = item.getAttribute('data-category');
+                        
+                        if (filterValue === 'all' || category === filterValue) {
+                            item.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    // Show/hide empty state
+                    emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
