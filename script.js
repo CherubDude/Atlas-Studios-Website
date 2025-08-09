@@ -1,11 +1,20 @@
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function() {
-    // Add smooth scroll behavior to navigation links
+    // Navigation functionality
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
-            // You can add navigation logic here if you have multiple pages
+            const href = this.getAttribute('href');
+            
+            // Allow normal navigation to other pages
+            if (href && href !== '#' && href !== window.location.pathname) {
+                return; // Let the browser handle the navigation
+            }
+            
+            // Only prevent default for same-page links or anchors
+            if (href === '#' || href.startsWith('#')) {
+                e.preventDefault();
+            }
         });
     });
 
@@ -41,10 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add click effect to join button
     const joinBtn = document.querySelector('.join-btn');
-    joinBtn.addEventListener('click', function() {
-        // Redirect to Discord server
-        window.open('https://discord.gg/WgRm5Kx3FM', '_blank');
-    });
+    if (joinBtn) {
+        joinBtn.addEventListener('click', function() {
+            // Redirect to Discord server
+            window.open('https://discord.gg/WgRm5Kx3FM', '_blank');
+        });
+    }
 
     // Add parallax effect to hero section
     const hero = document.querySelector('.hero');
