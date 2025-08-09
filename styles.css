@@ -100,7 +100,7 @@ body {
 }
 
 .highlight {
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    background: linear-gradient(135deg, #f1c605, #af6b1e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -154,7 +154,7 @@ body {
 }
 
 .showcase-logo {
-    height: 120px;
+    height: auto;
     width: auto;
 }
 
