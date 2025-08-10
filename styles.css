@@ -58,8 +58,8 @@ body {
 }
 
 .join-btn {
-    background: linear-gradient(135deg, #b87e3c, #f6863b);
-    color: rgb(218, 102, 24);
+    background: linear-gradient(135deg, #b87e3c, #712d00);
+    color: rgb(255, 255, 255);
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
