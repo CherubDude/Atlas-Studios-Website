@@ -59,7 +59,7 @@ body {
 
 .join-btn {
     background: linear-gradient(135deg, #b87e3c, #712d00);
-    color: rgb(255, 255, 255);
+    color: rgb(223, 211, 211);
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -218,7 +218,7 @@ body {
 
 .feature-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(59, 130, 246, 0.3);
+    border-color: rgba(246, 187, 59, 0.3);
     box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
 }
 
@@ -229,7 +229,7 @@ body {
 .feature-icon {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    background: linear-gradient(135deg, #f68f3b, #923306);
     border-radius: 12px;
     display: flex;
     align-items: center;
