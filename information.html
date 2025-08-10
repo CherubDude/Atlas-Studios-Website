@@ -511,6 +511,16 @@
             justify-content: center;
             margin: 0 auto;
             color: white;
+            /* Remove margin-bottom if present */
+        }
+
+        .avatar-placeholder .about-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            /* Remove margin-bottom if present */
         }
 
         .team-member h3 {
@@ -623,12 +633,6 @@
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
         }
-        .about-logo {
-        border-radius: 50%;
-            object-fit: cover;
-            width: 80px;
-            height: 80px;
-        } 
 
         .form-group input,
         .form-group select,
